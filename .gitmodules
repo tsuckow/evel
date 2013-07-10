@@ -1,0 +1,3 @@
+[submodule "evel"]
+	path = evel
+	url = https://github.com/tsuckow/evel.git
