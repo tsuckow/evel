@@ -1,1 +1,46 @@
-My GitHub Page
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="evel/evel.js"></script>
+    <script>
+      $(document).ready(function(){
+        var gist = window.location.hash.substring(1);
+        if( gist.length == 0 ) {
+          $("#privileged").html("You need to provide a Gist in the url as https://tsuckow.github.io/evel/#GISTID");
+        }
+        else {
+          $.get( "https://api.github.com/gists/" + gist)
+          .done(function(data){
+            var privileged = data.files['privileged.htm'];
+            var sandboxed = data.files['sandboxed.js'];
+
+            if( typeof privileged == "undefined" ) {
+              $("#privileged").html("Error: privileged.htm not found in Gist.");
+            }
+            else if( typeof sandboxed == "undefined" ) {
+              $("#privileged").html("Error: sandboxed.js not found in Gist.");
+            }
+            else
+            {
+              //Load Privileged HTML
+              $("#privileged").html(privileged.content);
+
+              //Load Sandboxed JS later
+              setTimeout(function(){
+                evel(sandboxed.content);
+              },1000);
+            }
+          })
+          .fail(function(){
+            $("#privileged").html("Problem getting Gist");
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="privileged"></div>
+  </body>
+</html>
+<!-- vim: set ts=2 sw=2 expandtab : -->
